@@ -3,12 +3,11 @@ name: Deploy to Azure Function App
 on:
   push:
     branches:
-      - main  # O "principal" si tu rama se llama así
+      - principal  # Usa "principal" porque es el nombre de tu rama principal
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Clonar el repositorio
         uses: actions/checkout@v3
@@ -16,11 +15,15 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '18.x'
+
+      - name: Instalar dependencias
+        run: npm install
 
       - name: Publicar en Azure Functions
         uses: Azure/functions-action@v1
         with:
-          app-name: lexureappfunc01
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+          app-name: 'lexureappfunc01'  # Este es tu Azure Function App
           package: '.'
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+
