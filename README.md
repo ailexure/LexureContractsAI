@@ -1,2 +1,1 @@
-# LexureContractsAI
-Backend of LexureContractsAI – an automated multilingual legal contract generator powered by Azure OpenAI and Azure Functions.
+# Actualización de prueba para activar CI/CD
