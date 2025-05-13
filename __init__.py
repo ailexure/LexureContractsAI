@@ -30,6 +30,3 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         )
     except Exception as e:
         return func.HttpResponse(str(e), status_code=500)
-
-
-
