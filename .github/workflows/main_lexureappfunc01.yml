@@ -1,8 +1,9 @@
-name: Deploy Azure Function lexureappfunc01
+name: Deploy to Azure Function - lexureappfunc01   # ✅ ENGLISH KEYWORDS
+
 on:
   push:
     branches:
-      - main
+      - main        # ← cámbialo a 'principal' si tu rama se llama así
   workflow_dispatch:
 
 jobs:
@@ -10,24 +11,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # 1) Checkout code
+      - name: Checkout source
+        uses: actions/checkout@v3
 
-    - name: Setup Python environment
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      # 2) (Opcional) Configurar Python para Functions v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -r requirements.txt
+      # 3) Empaquetar dependencias (solo si usas requirements.txt)
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements.txt --target="./.python_packages/lib/site-packages"
 
-    - name: Deploy to Azure Functions
-      uses: Azure/functions-action@v1
-      with:
-        app-name: 'lexureappfunc01'
-        package: '.'
-        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
-        scm-do-build-during-deployment: true
-        enable-oryx-build: true
+      # 4) Desplegar con Publish Profile
+      - name: Deploy to Azure Function App
+        uses: azure/functions-action@v1
+        with:
+          app-name: 'lexureappfunc01'                           # ← nombre exacto
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+          package: '.'                                          # carpeta raíz del código
