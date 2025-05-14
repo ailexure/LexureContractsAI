@@ -1,0 +1,30 @@
+name: Deploy to Azure Function – lexureappfunc01
+
+on:
+  push:
+    branches:
+      - main          # Cámbialo a 'principal' si tu rama principal se llama así
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          python -m pip install -r requirements.txt --target="./.python_packages/lib/site-packages"
+
+      - name: Deploy to Azure Functions
+        uses: azure/functions-action@v1
+        with:
+          app-name: lexureappfunc01
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+          package: '.'
